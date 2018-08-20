@@ -1,11 +1,25 @@
+# -*- coding: utf-8 -*-
+"""
+Created on Thu Jul  5 16:45:49 2018
 
-# coding: utf-8
+@author: ps29626
+"""
 
-# In[58]:
-
-import numpy as np
-import matplotlib.pyplot as plt
 import os
+import numpy as np
+import pickle
+import argparse
+
+#ArgParse stuff
+parser = argparse.ArgumentParser(description='Extract longitudinal profile and list of points on flow accumulation line')
+parser.add_argument('folder', help='Folder to store resulting files in A.K.A. name describing analysis')
+parser.add_argument('demin', help='DEM of Region')
+parser.add_argument('dataset', help='dataset to extract swaths from')
+parser.add_argument('clip', help='Anuga result used to clip lines')
+parser.add_argument('lines', help='Do you need to make line shapefiles?  "Yes" or "No".')
+#parser.add_argument('swaths', type=bool, help='Do you need to make swath shapefiles?')
+args = parser.parse_args()
+
 #Define neighbor function
 def neighbors(im, i, j, d=1):
     b = im[i-d:i+d+1, j-d:j+d+1].flatten()
@@ -13,10 +27,10 @@ def neighbors(im, i, j, d=1):
     n = np.hstack((b[:len(b)//2],b[len(b)//2+1:] ))
     return n
 
+
+
 direc = os.path.dirname(os.path.realpath(__file__)) + "\\"
 
-
-# In[17]:
 
 #Define file names
 filein = "BE_08"
@@ -216,3 +230,7 @@ for i in range(len(reachlist)):
     os.remove(headername)
     os.remove(rastername)
 
+
+
+def Main():
+	

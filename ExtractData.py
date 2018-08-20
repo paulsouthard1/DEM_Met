@@ -15,6 +15,16 @@ arcpy.env.overwriteOutput = True
 arcpy.CheckOutExtension("Spatial")
 arcpy.CheckOutExtension("3d")
 
+#ArgParse stuff
+parser = argparse.ArgumentParser(description='Extract lines and swaths of data along a reach and make shapefiles for visualization')
+parser.add_argument('folder', help='Folder to store resulting files in A.K.A. name describing analysis')
+parser.add_argument('demin', help='DEM of Region')
+parser.add_argument('dataset', help='dataset to extract swaths from')
+parser.add_argument('clip', help='Anuga result used to clip lines')
+parser.add_argument('lines', help='Do you need to make line shapefiles?  "Yes" or "No".')
+#parser.add_argument('swaths', type=bool, help='Do you need to make swath shapefiles?')
+args = parser.parse_args()
+
 #Define function to read MetaData
 def ReadData(lookuppath):
     #Read in pickle file with number of sections
@@ -132,6 +142,6 @@ parser.add_argument('dataset', help='dataset to extract swaths from')
 parser.add_argument('clip', help='Anuga result used to clip lines')
 parser.add_argument('lines', help='Do you need to make line shapefiles?  "Yes" or "No".')
 #parser.add_argument('swaths', type=bool, help='Do you need to make swath shapefiles?')
-args = parser.parse_args()    
+args = parser.parse_args()
 
 Main(args.folder,args.demin,args.dataset,args.clip,args.lines)
