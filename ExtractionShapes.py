@@ -127,20 +127,19 @@ def pointlist(dir_path,reachlist,FAArray,xll,yll,yul,xllr,yllr,cellsize,spacing,
     longthresh = 0
     #Create zero-value variable to order profile points
     seg = 0
+    #Create max value variable so that FA stepthrough works
+    ma0 = 10**20
     # Create blank variables to store k and l coordinates for each reach
     klist = np.zeros(1000000)
     llist = np.zeros(1000000)
     #Run loop that works through reach using flow accumulation array and selects cell with maximum accumulation
-    for m in range(0,999999):
+    m = 0
+    while ((k!=k2) == True) & ((l != l2) == True):
         #Store k's and l's in variable
         klist[m] = k
         llist[m] = l
-        #Break loop if at end of reach
-        if (k == k2) & (l == l2):
-            print("Termination point found")
-            break
         #Create a new cross-section point if spacing has been exceeded
-        elif longthresh >= spacing:
+        if longthresh >= spacing:
             #Define point number
             seg = seg + 1
             #Compute and store coordinates of center of cell that is 
@@ -153,8 +152,19 @@ def pointlist(dir_path,reachlist,FAArray,xll,yll,yul,xllr,yllr,cellsize,spacing,
             #Reset threshold counter
             longthresh = 0
             #Run Neighbor function again to get last point
-            Temp = neighbors(FAArray,k,l,d=1)
-            j = np.argmax(Temp)
+            #Run Neighbor function again to get last point
+			Temp = neighbors(FAArray,k,l,d=1)
+			j = np.argmax(Temp)
+			ma1 = Temp[j]
+			Temp2 = np.delete(Temp,j)
+			ma2 = np.amax(Temp2)
+			j2 = np.where(Temp==ma2)
+			j2 = j2[0][0]
+			print(str(ma0)+" "+str(ma1)+" "+str(ma2))
+			if (ma2>ma0) & (ma1>ma2):
+				print("a")
+				j = j2
+				ma1 = ma2
             if j == 0:
                 k = k-1
                 l = l-1
@@ -188,9 +198,21 @@ def pointlist(dir_path,reachlist,FAArray,xll,yll,yul,xllr,yllr,cellsize,spacing,
                 l = l+1
                 Long = np.sqrt(2)*cellsize
             longthresh = longthresh + Long
+            ma0 = ma1
+            m = m+1
         else:
             Temp = neighbors(FAArray,k,l,d=1)
-            j = np.argmax(Temp)
+			j = np.argmax(Temp)
+			ma1 = Temp[j]
+			Temp2 = np.delete(Temp,j)
+			ma2 = np.amax(Temp2)
+			j2 = np.where(Temp==ma2)
+			j2 = j2[0][0]
+			print(str(ma0)+" "+str(ma1)+" "+str(ma2))
+			if (ma2>ma0) & (ma1>ma2):
+				print("a")
+				j = j2
+				ma1 = ma2
             if j == 0:
                 k = k-1
                 l = l-1
@@ -224,6 +246,8 @@ def pointlist(dir_path,reachlist,FAArray,xll,yll,yul,xllr,yllr,cellsize,spacing,
                 l = l+1
                 Long = np.sqrt(2)*cellsize
             # Keep track of how far away the last cross-section is
+            m = m+1
+            ma0 = ma1
             longthresh = longthresh + Long
     return seg,points,klist,llist,inds
             
@@ -283,101 +307,6 @@ def makesect(storepath,seg,inds,klist,llist,points,width):
         f.write(str(RBX) + ", " + str(RBY) + ", " + str(LBX) + ", " + str(LBY))
         f.close()
     return angles
-        
-
-
-#def makesect(storepath,width,seg,points,inds,klist,llist):
-#    print("Making Cross Section text files")
-#    for m in np.arange(1,seg+1):
-#        # Call index along flow accumulation line where a given cross-section was stored
-#        Step = inds["seg_{}".format(m)]
-#        # 1st of 5 averaged lines
-#        # Find position of cell directly before cross-section point
-#        step = Step[0]-1
-#        backside = [llist[step],klist[step]]
-#        # Find position of cell directly after cross-section point
-#        step = step + 2
-#        frontside = [llist[step],klist[step]]
-#        #2nd of 5 averaged lines
-#        # Find position of cell two before cross-section point
-#        step = Step[0]-2
-#        backside2 = [llist[step],klist[step]]
-#        # Find position of cell two after cross-section point
-#        step = step + 4
-#        frontside2 = [llist[step],klist[step]]
-#        # 3rd of 5 averaged lines
-#        # Find position of cell three before cross-section point
-#        step = Step[0]-3
-#        backside3 = [llist[step],klist[step]]
-#        # Find position of cell three after cross-section point
-#        step = step + 6
-#        frontside3 = [llist[step],klist[step]]
-#        # 4th of 5 averaged lines
-#        # Find position of cell four before cross-section point
-#        step = Step[0]-4
-#        backside4 = [llist[step],klist[step]]
-#        # Find position of cell four after cross-section point
-#        step = step + 8
-#        frontside4 = [llist[step],klist[step]]
-#        # 5th of 5 averaged lines
-#        # Find position of cell five before cross-section point
-#        step = Step[0]-5
-#        backside5 = [llist[step],klist[step]]
-#        # Find position of cell five after cross-section point
-#        step = step + 10
-#        frontside5 = [llist[step],klist[step]]
-#        # Average 3 lines on either side to get angle
-#        #1st theta calc
-#        # Calculate angle of flow direction from two adjacent points
-#        if frontside[0] > backside[0]:
-#            theta = np.arctan((-(frontside[1]-backside[1]))/(frontside[0]-backside[0]))
-#        else:
-#            theta = np.arctan((-(frontside[1]-backside[1]))/(-(frontside[0]-backside[0])))
-#            theta = np.pi - theta
-#        #2nd theta calc
-#        # Calculate angle of flow direction from two adjacent points
-#        if frontside2[0] > backside2[0]:
-#            theta2 = np.arctan((-(frontside2[1]-backside2[1]))/(frontside2[0]-backside2[0]))
-#        else:
-#            theta2 = np.arctan((-(frontside2[1]-backside2[1]))/(-(frontside2[0]-backside2[0])))
-#            theta2 = np.pi - theta2
-#        #3rd theta calc
-#        # Calculate angle of flow direction from two adjacent points
-#        if frontside3[0] > backside3[0]:
-#            theta3 = np.arctan((-(frontside3[1]-backside3[1]))/(frontside3[0]-backside3[0]))
-#        else:
-#            theta3 = np.arctan((-(frontside3[1]-backside3[1]))/(-(frontside3[0]-backside3[0])))
-#            theta3 = np.pi - theta3
-#        #4th theta calc
-#        # Calculate angle of flow direction from two adjacent points
-#        if frontside4[0] > backside4[0]:
-#            theta4 = np.arctan((-(frontside4[1]-backside4[1]))/(frontside4[0]-backside4[0]))
-#        else:
-#            theta4 = np.arctan((-(frontside4[1]-backside4[1]))/(-(frontside4[0]-backside4[0])))
-#            theta4 = np.pi - theta4
-#        #5th theta calc
-#        # Calculate angle of flow direction from two adjacent points
-#        if frontside5[0] > backside5[0]:
-#            theta5 = np.arctan((-(frontside5[1]-backside5[1]))/(frontside5[0]-backside5[0]))
-#        else:
-#            theta5 = np.arctan((-(frontside5[1]-backside5[1]))/(-(frontside5[0]-backside5[0])))
-#            theta5 = np.pi - theta5
-#        #Perform averaging
-#        angles = [theta,theta2,theta3,theta4,theta5]
-#        theta = mean_angle(angles) - (np.pi/2)
-#        temppoints = points["seg_{}".format(m)]
-#        #Calculate endpoints of 10 m line centered on the flow accumulation line
-#        RBX = temppoints[0]+(np.cos(theta)*(width/2))
-#        RBY = temppoints[1]+(np.sin(theta)*(width/2))
-#        LBX = temppoints[0]-(np.cos(theta)*(width/2))
-#        LBY = temppoints[1]-(np.sin(theta)*(width/2))
-#        # Save endpoints to a textfile
-#        savename = storepath + "CS_{}".format(m)+".txt"
-#        print("Theta of " + str(theta) + "for " + savename)
-#        f = open(savename, 'w')
-#        f.write("RBX, RBY, LBX, LBY" + "\n")
-#        f.write(str(RBX) + ", " + str(RBY) + ", " + str(LBX) + ", " + str(LBY))
-#        f.close()
     
 def Main(folder,demin,reachin,spacing,width):
     #Define root directory

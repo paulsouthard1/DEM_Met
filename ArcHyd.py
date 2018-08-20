@@ -11,7 +11,7 @@ dir_path = os.path.dirname(os.path.realpath(__file__))+"\\"
 arcpy.CheckOutExtension("Spatial")
 arcpy.env.overwriteOutput = True
 
-parser = argparse.ArgumentParser(description='Run ArcHydro tools DEM to produce flow accumulation and accompanying ASCII files, as wella s ASCII files of Anuga Results')
+parser = argparse.ArgumentParser(description='Run ArcHydro tools DEM to produce flow accumulation and accompanying ASCII files, as well as ASCII files of Anuga Results')
 parser.add_argument('demin', help='DEM of Region')
 parser.add_argument('momin', help='Anuga Momentum results raster')
 parser.add_argument('depin', help='Anuga Depth results raster')
