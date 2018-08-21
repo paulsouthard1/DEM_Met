@@ -194,6 +194,7 @@ def pulldata(reachlist,FAArray,DArray,xll,yll,yul,xllr,yllr,nrows,ncols,cellsize
 			m = m+1
 			ma0 = ma1
 			longthresh = longthresh + Long
+			Longs[m] = Longs[m-1] + Long
 		else:
 			#Run Neighbor function again to get last point
 			Temp = neighbors(FAArray,k,l,d=1)
@@ -283,19 +284,20 @@ def storemeta(dir_path,storepath,folder,demin,spacing,seg):
 	sect["Spacing"] = spacing
 	sect["Folder"] = folder
 	sect["Reach"] = "reach_"+folder+".txt"
-	file = open(dir_path + "sectnum", "wb")
+	file = open(dir_path + "MetaSlope", "wb")
 	pickle.dump(sect,file,protocol=2)
 	file.close()
-	shutil.move(dir_path+"sectnum",storepath+"sectnum")
+	shutil.move(dir_path+"MetaSlope",storepath+"MetaSlope")
 
 def storedata(dir_path,storepath,points,inds,Elevs,Longs,streamline):
+	print("Storing data")
 	All = {}
 	All["points"] = points
 	All["inds"] = inds
 	All["Elevs"] = Elevs
 	All["Longs"] = Longs
 	file = open(dir_path + "slope", "wb")
-	pickle.dump(points,file,protocol=2)
+	pickle.dump(All,file,protocol=2)
 	file.close()
 	shutil.move(dir_path+"slope",storepath+"slope")
 
