@@ -31,15 +31,20 @@ filein = filein[:filein.find(".")]
 #Create ASCII of DEM
 asciiout = newpath + filein + "_demasc.txt"
 ap.RasterToASCII_conversion(demin,asciiout)
+print("Created ASCII of DEM")
 
 #Name Output ASCII File, then run ArcHydro tools and export ASCII of filled DEM and flow accumulation
 asciiout = newpath + filein + "_fdemasc.txt"
 outfill = sa.Fill(demin)
 ap.RasterToASCII_conversion(outfill,asciiout)
+print("Created ASCII of filled DEM")
 asciiout = newpath + filein + "_faasc.txt"
 outfd = sa.FlowDirection(outfill)
+print("Created Raster of Flow Direction")
 outfa = sa.FlowAccumulation(outfd,"","INTEGER")
+print("Created Raster of Flow Accumulation")
 ap.RasterToASCII_conversion(outfa,asciiout)
+print("Created ASCII of Flow Accumulation")
 
 #Name Anuga Result ASCII files and export as ASCII
 momin=args.momin
@@ -47,15 +52,18 @@ filein = os.path.basename(momin)
 filein = filein[:filein.find(".")]
 asciiout = newpath + filein + "_asc.txt"
 ap.RasterToASCII_conversion(momin,asciiout)
+print("Created ASCII of Modeled Momentum")
 
 depin=args.depin
 filein = os.path.basename(depin)
 filein = filein[:filein.find(".")]
 asciiout = newpath + filein + "_asc.txt"
 ap.RasterToASCII_conversion(depin,asciiout)
+print("Created ASCII of Modeled Depth")
 
 stgin=args.stgin
 filein = os.path.basename(stgin)
 filein = filein[:filein.find(".")]
 asciiout = newpath + filein + "_asc.txt"
 ap.RasterToASCII_conversion(stgin,asciiout)
+print("Created ASCII of Modeled Stage")
