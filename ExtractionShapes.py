@@ -279,16 +279,6 @@ def makesect(storepath,seg,inds,klist,llist,points,width):
 		step3 = [llist[step3],klist[step3]]
 		theta1 = (np.pi/2)-np.arctan2(step2[1]-step1[1], step2[0]-step1[0])
 		theta2 = (np.pi/2)-np.arctan2(step3[1]-step2[1], step3[0]-step2[0])
-#		if step2[0] > step1[0]:
-#			theta1 = np.arctan((-(step2[1]-step1[1]))/(step2[0]-step1[0]))
-#		else:
-#			theta1 = np.arctan((-(step2[1]-step1[1]))/(-(step2[0]-step1[0])))
-#			theta1 = np.pi - theta
-#		if step3[0] > step2[0]:
-#			theta2 = np.arctan((-(step3[1]-step2[1]))/(step3[0]-step2[0]))
-#		else:
-#			theta2 = np.arctan((-(step3[1]-step2[1]))/(-(step3[0]-step2[0])))
-#			theta2 = np.pi - theta
 		theta = [theta1,theta2]
 		theta = meanangle(theta)
 		print(str(theta1)+", "+str(theta2)+" -> "+str(theta))
