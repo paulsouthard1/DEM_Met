@@ -17,7 +17,7 @@ parser = argparse.ArgumentParser(description='Produce some vertical lines along 
 parser.add_argument('folder', help='Folder to store resulting files in A.K.A. name describing analysis')
 parser.add_argument('demin', help='DEM of Region')
 parser.add_argument('reachin', help='X,Y Coordinates of reach')
-parser.add_argument('--spacing',  type=int, nargs='?', default=50, help='Spacing between lines, length of sampling window')
+parser.add_argument('--spacing',  type=int, nargs='?', default=20, help='Spacing between lines, length of sampling window')
 parser.add_argument('--width',  type=int, nargs='?', default=150, help='Width of lines')
 args = parser.parse_args()
 
@@ -290,7 +290,7 @@ def makesect(storepath,seg,inds,klist,llist,points,width):
 		LBX = temppoints[0]-(np.cos(theta)*(width/2))
 		LBY = temppoints[1]-(np.sin(theta)*(width/2))
 		# Save endpoints to a textfile
-		savename = storepath + "CS2_{}".format(m)+".txt"
+		savename = storepath + "CS_{}".format(m)+".txt"
 		print("Theta of " + str(theta) + "for " + savename)
 		f = open(savename, 'w')
 		f.write("RBX, RBY, LBX, LBY" + "\n")

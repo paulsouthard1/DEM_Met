@@ -42,18 +42,18 @@ def LoadSect(lookuppath,storepath,arcpath,demname,NumSect):
     prj = arcpath + demname + "_fdemasc.prj"
     for j in np.arange(2,NumSect):
         #Create key to find text file
-        lookup = "CS2_{}".format(j) + ".txt"
+        lookup = "CS_{}".format(j) + ".txt"
         print("Creating Line from "+ lookup)
         #Assign parameters for ArcTool
-        in_table = lookuppath + "CS2_{}".format(j)+".txt"
-        out_featureclass = storepath+"CS2_{}".format(j)+".shp"
+        in_table = lookuppath + "CS_{}".format(j)+".txt"
+        out_featureclass = storepath+"CS_{}".format(j)+".shp"
         arcpy.XYToLine_management(in_table, out_featureclass, startx_field, starty_field, endx_field, endy_field, "GEODESIC", "", prj)
         
 #Clip lines to modeled flow width
 def cliplines(storepath,clipshape,NumSect):
     for j in np.arange(2,NumSect):
         #Create key to find text file
-        lookup = "CS2_{}".format(j) + ".shp"
+        lookup = "CS_{}".format(j) + ".shp"
         inshape = storepath + lookup
         outshape = storepath + "cl_"+ lookup
         print("Clipping Line "+ lookup)
@@ -63,7 +63,7 @@ def cliplines(storepath,clipshape,NumSect):
 def LinePull(storepath,lookuppath,dataset,dataname,NumSect):
     for j in np.arange(2,NumSect):
         #Create key to find text file
-        lookup = "CS2_{}".format(j) + ".shp"
+        lookup = "CS_{}".format(j) + ".shp"
         print("Pulling data from " + lookup)
         in_line_features = storepath + "cl_"+ lookup
         out_table = lookuppath+dataname+"_"+str(j)+".txt"
